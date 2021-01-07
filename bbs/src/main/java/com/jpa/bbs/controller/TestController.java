@@ -10,8 +10,30 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class TestController {
 
     @RequestMapping("/")
+    public String main(Model model){
+        return "redirect:/main";
+    }
+
+    @RequestMapping("/main")
     public String test(Model model){
         model.addAttribute("name", "test");
-        return "main";
+        return "board/main";
     }
+
+    @RequestMapping("/board")
+    public String test2(Model model){
+        model.addAttribute("name", "test");
+        return "board/board_detail";
+    }
+
+    @RequestMapping("/board_write")
+    public String test3(){
+        return "board/board_write";
+    }
+
+    @RequestMapping("/board_modify")
+    public String test4(){
+        return "board/board_modify";
+    }
+
 }

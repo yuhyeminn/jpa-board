@@ -15,6 +15,10 @@ spring:
     view:
       prefix: /WEB-INF/views/
       suffix: .jsp
+    static-path-pattern: /resources/**
+  devtools:
+    livereload:
+      enabled: true
 server:
   port: 8088
   servlet:
