@@ -13,7 +13,7 @@ public class Member {
     @Column(name = "password")
     private String password;
     @Column(name = "member_name")
-    private String name;
+    private String memberName;
     @Column(name = "member_email")
-    private String email;
+    private String memberEmail;
 }

@@ -1,5 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -29,16 +32,108 @@
                 JPA 게시판
             </a>
             <div class="login-form row g-2">
-                <form action="#" class="d-flex" method="post">
-                    <label for="memberId" class="col-form-label col-auto">아이디</label>
-                    <input type="text" class="form-control" id="memberId" name="memberId">
+                <c:if test="${memberLoggedIn == null}">
+                    <form class="d-flex" method="post" id="login-frm">
+                        <label for="email" class="col-form-label col-auto">이메일</label>
+                        <input type="text" class="form-control" id="email" name="email">
 
-                    <label for="password" class="col-form-label col-auto"">비밀번호</label>
-                    <input type="password" class="form-control" id="password" name="password">
+                        <label for="password" class="col-form-label col-auto">비밀번호</label>
+                        <input type="password" class="form-control" id="password" name="password">
 
-                    <button type="submit" class="btn col-auto btn-dark" style="margin-left:10px">로그인</button>
-                </form>
+                        <button type="button" class="btn col-auto btn-dark" id="login-btn" style="margin-left:10px">로그인</button>
+                    </form>
+                    <button type="button" class="btn col-auto btn-dark" style="margin-left:10px" data-toggle="modal" data-target="#modal-register">회원가입</button>
+                </c:if>
+                <!-- 로그인 한 경우 -->
+                <c:if test="${memberLoggedIn != null}">
+                    <span><strong>${memberLoggedIn.memberName}</strong> 님 안녕하세요.</span>
+                    <button type="button" class="btn col-auto btn-dark" id="logout-btn" style="margin-left:10px" onclick="location.href='${pageContext.request.contextPath}/member/logout'">로그아웃</button>
+                </c:if>
             </div>
         </nav>
     </header>
+    <!-- 회원 가입 모달 -->
+    <div class="modal fade" id="modal-register">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">회원 가입</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form id="register-frm" method="post">
+                    <div class="modal-body" style="padding:30px;">
+                        <div class="form-group">
+                            <label for="memberId" class="col-form-label col-auto">이름</label>
+                            <input type="text" class="form-control" name="name" required>
+
+                            <label for="memberId" class="col-form-label col-auto">이메일</label>
+                            <input type="email" class="form-control" name="email" required>
+
+                            <label for="password" class="col-form-label col-auto">비밀번호</label>
+                            <input type="password" class="form-control" name="password" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">취소</button>
+                        <button type="button" class="btn btn-info" id="register-btn">회원 가입</button>
+                    </div>
+                </form>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <script>
+        /* 회원 가입 */
+        $("#register-btn").click(function(){
+            let formData = new FormData(document.getElementById('register-frm'));
+            $.ajax({
+                url:"${pageContext.request.contextPath}/member",
+                data: formData,
+                type:"POST",
+                processData: false,
+                contentType: false,
+                success: data => {
+                    if(data.complete){
+                        alert("성공적으로 가입되었습니다.");
+                        $("#modal-register").modal('hide');
+                    }else{
+                        alert("이미 가입된 이메일입니다.");
+                    }
+                    //입력폼 초기화
+                    $("#register-frm")[0].reset();
+                },
+                error : (x,s,e) => {
+                    console.log(x,s,e);
+                }
+            });
+        });
+
+        /* 로그인 */
+        $("#login-btn").click(function(){
+            let formData = new FormData(document.getElementById('login-frm'));
+            $.ajax({
+                url:"${pageContext.request.contextPath}/member/login",
+                data: formData,
+                type:"POST",
+                processData: false,
+                contentType: false,
+                success: data => {
+                    alert(data.msg);
+                    //입력폼 초기화
+                    $("#login-frm")[0].reset();
+
+                    if(data.complete){
+                        history.go(0);
+                    }
+                },
+                error : (x,s,e) => {
+                    console.log(x,s,e);
+                }
+            });
+        });
+
+    </script>
     <section id="content">

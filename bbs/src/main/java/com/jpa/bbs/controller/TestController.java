@@ -4,6 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.support.SessionStatus;
+
+import javax.servlet.http.HttpSession;
 
 @Controller
 @RequiredArgsConstructor
@@ -36,4 +39,13 @@ public class TestController {
         return "board/board_modify";
     }
 
+    @RequestMapping("/member/logout")
+    public String logout(SessionStatus sessionStatus, HttpSession session) {
+
+        if(session != null) {
+            session.invalidate();
+        }
+
+        return "redirect:/main"; // /spring 으로 리다이렉트
+    }
 }
