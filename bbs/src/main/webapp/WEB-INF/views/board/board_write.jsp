@@ -64,16 +64,17 @@
     }
 </style>
 
-<form action="" id="boardWriteFrm">
+<form action="${pageContext.request.contextPath}/board" id="boardWriteFrm" method="post" enctype="multipart/form-data">
     <div id="board-container">
-        <p style="text-align: left">작성자 : 홍길동</p>
+        <p style="text-align: left">작성자 : ${memberLoggedIn.memberName} (${memberLoggedIn.memberEmail})</p>
+        <%--<input type="hidden" name="boardWriter" value="${memberLoggedIn}">--%>
         <div id="board-titlebox" class="content-row d-flex">
             <span style="font-weight: bold;margin-right:20px;" class="col-auto">제목</span>
-            <input class="form-control col-10" type="text" name="noticeTitle" id="boardTitle">
+            <input class="form-control col-10" type="text" name="boardTitle" id="boardTitle">
         </div>
         <div id="board-content">
             <p style="font-weight:bold;font-size:20px;margin-top:5px;">내용</p>
-            <textarea class="form-control" name="" id="" cols="130" rows="20"></textarea>
+            <textarea class="form-control" name="boardContent"  cols="130" rows="20"></textarea>
         </div>
         <div id="notice-file" class="content-row">
             <input type="file" name="upFile" />

@@ -3,6 +3,8 @@ package com.jpa.bbs.domain;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
+import java.util.Date;
 
 @Entity
 @Data
@@ -21,9 +23,9 @@ public class Board {
     @Column(name = "board_content")
     private String boardContent;
     @Column(name = "enroll_date")
-    private String EnrollDate;
+    private Date enrollDate = new Date();
     @Column(name = "original_file_name")
-    private String OriginalFileName;
+    private String originalFileName;
     @Column(name = "renamed_file_name")
-    private String RenamedFileName;
+    private String renamedFileName;
 }

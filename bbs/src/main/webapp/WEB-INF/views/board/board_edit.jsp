@@ -77,47 +77,61 @@
     }
 </style>
 
-<form action="#" id="noticeWriteFrm"
+<form action="${pageContext.request.contextPath}/board/edit/${board.boardNo}" id="boardUpdateFrm"
       method="post" enctype="multipart/form-data">
     <input type="hidden" name="noticeNo" value="" />
     <input type="hidden" name="noticeWriter" value= />
     <div id="board-container">
-        <div id="notice-titlebox" class="content-row">
-            <span style="font-weight: bold; margin-right: 20px;">제목</span> <input
-                class="form-control" type="text" name="noticeTitle" id="noticeTitle"
-                value=""
-                style="width: 850px; display: inline-block;">
+        <div id="board-titlebox" class="content-row d-flex">
+            <span style="font-weight: bold;margin-right:20px;" class="col-auto">제목</span>
+            <input class="form-control col-10" type="text" name="boardTitle" id="boardTitle" value="${board.boardTitle}">
         </div>
-        <div id="notice-content">
-            <p style="font-weight: bold; font-size: 20px; margin-top: 5px;">내용</p>
-            <textarea class="form-control" name="noticeContent" id="" cols="130" rows="20"></textarea>
+        <div id="board-content">
+            <p style="font-weight:bold;font-size:20px;margin-top:5px;">내용</p>
+            <textarea class="form-control" name="boardContent"  cols="130" rows="20">${board.boardContent}</textarea>
         </div>
-        <div id="notice-file" class="content-row">
+        <div id="board-file" class="content-row">
             <!-- file태그의 value속성은 임의로 변경할 수 없다. 반영되지 않음. -->
             <input type="file" name="upFile"/>
 
             <!-- file이 있는 경우 파일명 표시 -->
-            <span id="fname"></span>
+            <c:if test="${board.originalFileName != null}">
+                <span id="fname">${board.originalFileName}</span>
+            </c:if>
 
             <input type="hidden" name="oldOriginalFileName"
-                   value="" />
+                   value="${board.originalFileName}" />
 
             <input type="hidden" name="oldRenamedFileName"
-                   value="" />
+                   value="${board.renamedFileName}" />
 
             <!-- 기존파일삭제 체크박스 -->
-
-            <input type="checkbox" name="delFileChk" id="delFileChk"/>
-            <label for="delFileChk">첨부파일삭제</label>
-
+            <c:if test="${board.renamedFileName != null}">
+                <input type="checkbox" name="del_flag" id="delFileChk"/>
+                <label for="delFileChk">첨부파일삭제</label>
+            </c:if>
         </div>
         <div id="btn-group">
 
-            <button type="submit" class="btn btn-dark">수정</button>
+            <button type="submit" id="update-btn" class="btn btn-dark">수정</button>
 
-            <button type="button" id="list-button" class="btn btn-dark" style="width: 150px;">목록</button>
+            <button type="button" id="list-button" class="btn btn-dark" style="width:150px;" onclick = "location.href = '${pageContext.request.contextPath}' ">목록</button>
         </div>
     </div>
 </form>
 
+<script>
+    $("[name=upFile]").change(function(){
+        //수정페이지에서 파일태그에 파일을 추가한 경우
+        if($(this).val() != ""){
+            $("#fname").hide();
+            $("#delFileChk").hide().next().hide();
+            $("#delFileChk").val(true);
+        }
+        else{
+            $("#fname").show();
+            $("#delFileChk").show().next().show();
+        }
+    });
+</script>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>

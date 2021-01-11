@@ -65,20 +65,36 @@
 </style>
 
 <div id="board-container">
-    <p id="boardNo"><span>NO.</span><span id="board-no">게시글번호</span></p>
+    <p id="boardNo"><span>NO.</span><span id="board-no">${board.boardNo}</span></p>
 
     <div id="board-titlebox" class="content-row">
-        <span id="board-title">게시글 타이틀</span>
-        <span id="board-date">날짜 부분</span>
-        <span id="board-write">작성자 : 날짜 부분 </span>
+        <span id="board-title">${board.boardTitle}</span>
+        <span id="board-date">${board.enrollDate}</span>
+        <span id="board-write">작성자 : ${board.boardWriter.memberName} </span>
     </div>
-    <div id="board-content">ddddddddddddddddddddddddddddddddddddddddddd<br>dddddddddddddddddddddddddddddd</div>
-    <div id="board-file" class="content-row"><img src="${pageContext.request.contextPath}/resources/images/file.png" id="file-image" style="width:20px">첨부파일.txt</div>
+    <div id="board-content">${board.boardContent}</div>
+    <div id="board-file" class="content-row">
+        <c:if test="${board.renamedFileName != null}">
+            <img src="${pageContext.request.contextPath}/resources/images/file.png" id="file-image" style="width:20px"> ${board.originalFileName}
+        </c:if>
+        <c:if test="${board.renamedFileName == null}">
+            <span>첨부파일 없음</span>
+        </c:if>
+    </div>
     <div id="btn-group">
-        <button type="button" class="btn btn-dark">수정</button>
-        <button type="button" class="btn btn-dark">삭제</button>
+        <c:if test="${board.boardWriter.memberId eq memberLoggedIn.memberId}">
+            <button type="button" class="btn btn-dark" id="board-edit-btn">수정</button>
+            <button type="button" class="btn btn-dark" id="board-delete-btn">삭제</button>
+        </c:if>
         <button type="button" id="list-button" class="btn btn-dark" style="width:150px;" onclick = "location.href = '${pageContext.request.contextPath}' ">목록</button>
     </div>
 </div>
-
+<script>
+    $("#board-edit-btn").click(function(){
+       location.href = "${pageContext.request.contextPath}/board/edit/"+${board.boardNo};
+    });
+    $("#board-delete-btn").click(function(){
+        location.href = "${pageContext.request.contextPath}/board/delete/"+${board.boardNo};
+    })
+</script>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>

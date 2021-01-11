@@ -19,45 +19,48 @@
         </tr>
         </thead>
         <tbody>
-        <tr>
-            <th scope="row">1</th>
-            <td>gg</td>
-            <td>Otto</td>
-            <td>
-            <c:if test="1=1">
-                <img src="${pageContext.request.contextPath}/resources/images/file.png" alt="" style="width:20px">
-            </c:if>
-            </td>
-            <td>2019-12-25</td>
-        </tr>
-        <tr>
-            <th scope="row">2</th>
-            <td>Jacob</td>
-            <td>Thornton</td>
-            <td>2019-12-25</td>
-        </tr>
-        <tr>
-            <th scope="row">3</th>
-            <td>Larry</td>
-            <td>the Bird</td>
-            <td>2019-12-25</td>
-        </tr>
-        <tr>
-            <th scope="row">3</th>
-            <td>Larry</td>
-            <td>the Bird</td>
-            <td>2019-12-25</td>
-        </tr>
-        <tr>
-            <th scope="row">3</th>
-            <td>Larry</td>
-            <td>the Bird</td>
-            <td>2019-12-25</td>
-        </tr>
-        </tbody>
 
+        <c:forEach var="board" items="${boardList.content}">
+        <tr class="board_detail" id="${board.boardNo}">
+                <th scope="row">${board.boardNo}</th>
+                <td>${board.boardTitle}</td>
+                <td>${board.boardWriter.memberName}</td>
+                <td>
+                <c:if test="${board.renamedFileName != null}">
+                    <img src="${pageContext.request.contextPath}/resources/images/file.png" alt="" style="width:20px">
+                </c:if>
+                </td>
+                <td>${board.enrollDate}</td>
+        </tr>
+        </c:forEach>
+        </tbody>
     </table>
+    <ul class="pager">
+        <c:if test="${!boardList.first}">
+            <li class="previous">
+                <a href="?page=${boardList.number-1}">&larr; Newer Posts</a>
+            </li>
+        </c:if>
+        <c:if test="${!boardList.last}">
+            <li class="next">
+                <a href="?page=${boardList.number+1}">Older Posts &rarr;</a>
+            </li>
+        </c:if>
+    </ul>
     <div id="writebtnbox" style="text-align:right;padding-right:110px;"><button class="btn btn-dark" id="writeBtn">글쓰기</button></div>
 </div>
+<script>
+    $(".board_detail").click(function(){
+        //클릭한 행의 게시글 번호
+        let boardNo = this.id;
+        location.href="${pageContext.request.contextPath}/board/"+boardNo;
+    });
+    $("#writeBtn").click(function(){
+        //게시글 글쓰기 폼으로 이동
+        location.href="${pageContext.request.contextPath}/board/write";
+    });
+
+
+</script>
 
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>
