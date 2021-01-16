@@ -1,6 +1,7 @@
 package com.jpa.bbs.controller;
 
 import com.jpa.bbs.domain.Member;
+import com.jpa.bbs.dto.MemberDTO;
 import com.jpa.bbs.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,20 +25,17 @@ public class MemberController {
 
     //회원 가입
     @PostMapping("/member")
-    public Map<String, Object> register(@RequestParam String email,@RequestParam String password, @RequestParam String name){
+    public Map<String, Object> register(@RequestParam MemberDTO memberDTO){
         Map<String, Object> result = new HashMap<String, Object>();
 
         try{
             //이메일 가입
             //이미 가입된 회원인지 확인
-            Member m = memberService.getOneMember(email);
+            Member m = memberService.getOneMember(memberDTO.getMemberEmail());
 
             if(m.getMemberEmail() == null || "".equals(m.getMemberEmail())){
                 //회원 등록
-                m.setMemberEmail(email);
-                m.setPassword(password);
-                m.setMemberName(name);
-                memberService.registerMember(m);
+                memberService.registerMember(memberDTO);
                 result.put("complete", true);
             }else{
                 result.put("complete",false);
@@ -66,8 +64,8 @@ public class MemberController {
                 msg = "존재하지 않는 회원입니다.";
             }
             else{
-                //비밀번호 일치 확인 (암호화 안함)
-                if(m.getPassword().equals(password)){
+                //비밀번호 일치 확인(암호화 작업 완료)
+                if(memberService.matchPassword(password, m.getPassword())){
                     complete = true;
                     msg = m.getMemberName() + "님 안녕하세요.";
                     //세션에 저장
